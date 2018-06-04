@@ -8,6 +8,6 @@ myaxios.install = function (Vue) {
     // headers: {'X-Custom-Header': 'foobar'}
   });
   // 设置Vue实例的属性
-  Vue.prototype.$http = instance;
+  Vue.prototype.$axios = instance;
 };
 export default myaxios;

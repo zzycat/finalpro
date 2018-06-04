@@ -6,9 +6,13 @@ import router from './router'
 import Myaxios from '@/plugins/myaxios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import moment from 'moment'
 // 全局样式
 import '@/assets/css/index.css';
 
+Vue.filter('fmtDate',(value,fmtStr)=>{
+  return moment(value).format(fmtStr);
+})
 Vue.config.productionTip = false
 Vue.use(Myaxios)
 Vue.use(ElementUI)
