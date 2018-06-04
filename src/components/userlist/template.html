@@ -1,0 +1,116 @@
+<el-card class="box-card">
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!-- searchbox -->
+    <el-row class="searchContainer">
+        <el-col :span="24">
+            <div class="grid-content bg-purple-dark">
+                <el-input
+                v-model="query"
+                placeholder="请输入内容"
+                class="searchInput"
+                clearable>
+                <el-button @click="handleSearch" slot="append" icon="el-icon-search"></el-button>
+                </el-input>
+                <el-button type="success" @click="addUserFormVisible = true" plain>添加用户</el-button>
+            </div>
+        </el-col>
+    </el-row>
+
+    <!-- table -->
+    <el-table
+    stripe
+    border
+    :data="tableData"
+    style="width: 100%">
+    <el-table-column type='index' width='50'></el-table-column>
+    <el-table-column prop="username" label="姓名" width="180"></el-table-column>
+    <el-table-column prop="email" label="邮箱" width="180"></el-table-column>
+    <el-table-column prop="mobile" label="电话" width="180"></el-table-column>
+    <el-table-column label="创建时间" width="180">
+        <template slot-scope="scope">
+            {{ scope.row.create_time | fmtDate('YYYY-MM-DD') }}
+        </template>
+    </el-table-column>
+    <el-table-column
+    label="用户状态">
+    <template slot-scope="scope">
+      <!-- 获取的是当前行的索引 ，从0开始 -->
+      <!-- {{ scope.$index }} -->
+      <!-- 获取的是当前行绑定的数据 对象 -->
+      <!-- {{ scope.row }} -->
+      <!-- {{ scope.row.mg_state }} -->
+      <el-switch
+        @change="handleChange(scope.row)"
+        v-model="scope.row.mg_state"
+        active-color="#13ce66"
+        inactive-color="#ff4949">
+      </el-switch>
+    </template>
+    </el-table-column>
+    <el-table-column label="操作">
+    <template slot-scope="scope">
+      <el-button
+        size="mini"
+        type="primary"
+        icon="el-icon-edit"
+        plain>
+      </el-button>
+      <el-button
+        size="mini"
+        type="danger"
+        icon="el-icon-delete"
+        plain>
+      </el-button>
+      <el-button
+        type="success"
+        icon="el-icon-check"
+        size="mini"
+        plain>
+      </el-button>
+    </template>
+  </el-table-column>
+</el-table>
+<!-- pagenation -->
+<el-pagination
+background
+@size-change="handleSizeChange"
+@current-change="handleCurrentChange"
+:current-page="pagenum"
+:page-size="pagesize"
+layout="total, sizes, prev, pager, next, jumper"
+:page-sizes="[2, 4, 6]"
+:total="total">
+</el-pagination>
+
+<!-- add user -->
+<el-dialog title="添加用户"
+    :visible.sync="addUserFormVisible">
+    <el-form
+      label-position="right" 
+      label-width="100px"
+      :rules="rules"
+      ref="addUserForm"
+      :model="addFormData">
+      <el-form-item label="用户名" prop="username">
+        <el-input auto-complete="off" v-model="addFormData.username"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input type="password" auto-complete="off" v-model="addFormData.password"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="addFormData.email"></el-input>
+      </el-form-item>
+      <el-form-item label="电话" prop="mobile">
+        <el-input v-model="addFormData.mobile"></el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="addUserFormVisible = false">取 消</el-button>
+      <el-button type="primary" @click="handleAddUser">确 定</el-button>
+    </div>
+  </el-dialog>
+</el-card>
