@@ -15,75 +15,24 @@
     </el-header>
     <el-container class="container">
       <el-aside class="aside" width="200px">
-        <!--
-          unique-opened只能展开一个菜单项
-          router 可以跳转到index指定的路由路径
-          default-active="1-1" 默认指定某一个menu-item展开，要和item的index的值一样
-        -->
         <el-menu
           :unique-opened="true"
           :router="true"
           class="menu">
-          <el-submenu index="1">
+          <el-submenu
+            v-for="item1 in menus"
+            :key="item1.id"
+            :index="item1.id">
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span>用户管理</span>
+              <span>{{ item1.authName }}</span>
             </template>
-            <el-menu-item index="users">
+            <el-menu-item
+              v-for="item2 in item1.children"
+              :key="item2.id"
+              :index="'/' + item2.path">
               <i class="el-icon-menu"></i>
-              用户列表
-            </el-menu-item>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>权限管理</span>
-            </template>
-            <el-menu-item index="users">
-              <i class="el-icon-menu"></i>
-              角色列表
-            </el-menu-item>
-            <el-menu-item index="users">
-              <i class="el-icon-menu"></i>
-              权限列表
-            </el-menu-item>
-          </el-submenu>
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>商品管理</span>
-            </template>
-            <el-menu-item index="users">
-              <i class="el-icon-menu"></i>
-              商品列表
-            </el-menu-item>
-            <el-menu-item index="users">
-              <i class="el-icon-menu"></i>
-              分类参数
-            </el-menu-item>
-            <el-menu-item index="users">
-              <i class="el-icon-menu"></i>
-              商品分类
-            </el-menu-item>
-          </el-submenu>
-          <el-submenu index="4">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>订单管理</span>
-            </template>
-            <el-menu-item index="users">
-              <i class="el-icon-menu"></i>
-              订单列表
-            </el-menu-item>
-          </el-submenu>
-          <el-submenu index="5">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>数据统计</span>
-            </template>
-            <el-menu-item index="users">
-              <i class="el-icon-menu"></i>
-              数据报表
+              {{ item2.authName }}
             </el-menu-item>
           </el-submenu>
         </el-menu>
@@ -97,14 +46,22 @@
 
 <script>
 export default {
-  beforeCreate() {
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-      this.$router.push({
-        name: "login"
-      });
-      this.$message.warning("Please login!");
-    }
+  // beforeCreate() {
+  //   const token = sessionStorage.getItem('token');
+  //   if (!token) {
+  //     this.$router.push({
+  //       name: "login"
+  //     });
+  //     this.$message.warning("Please login!");
+  //   }
+  // },
+  created() {
+    this.loadData();
+  },
+  data() {
+    return {
+      menus: []
+    };
   },
   methods:{
     handleLogout(){
@@ -113,6 +70,10 @@ export default {
         name:'login'
       });
       this.$message.success('Logout Successfully!')
+    },
+    async loadData() {
+      const { data: resData } = await this.$axios.get('menus');
+      this.menus = resData.data;
     }
   }
 };

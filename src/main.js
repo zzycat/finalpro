@@ -7,8 +7,11 @@ import Myaxios from '@/plugins/myaxios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import moment from 'moment'
+import MyBreadcrumb from '@/components/mybreadcrumb'
 // 全局样式
 import '@/assets/css/index.css';
+// 全局组件
+Vue.component(MyBreadcrumb.name, MyBreadcrumb);
 
 Vue.filter('fmtDate',(value,fmtStr)=>{
   return moment(value).format(fmtStr);
